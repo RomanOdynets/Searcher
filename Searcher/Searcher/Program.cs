@@ -1,30 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Searcher
 {
     class Program
     {
+        // Имя файла для поиска (если поиск шаблонный - null)
         public static string file_name = null;
+        // Шаблон для поиска (если поиск по имени - null)
         public static string template = null;
+        // Тип поиска (file / template)
         public static string mode;
-        public static string start_disk;
+        // Диск для поиска, по умолчанию C:\
+        public static string start_disk = @"C:\";
         static void Main(string[] args)
         {
-            if(args.Length == 0)
+            // В региона проверка и получение информации с момента запуска (массив args)
+            #region Checker for start
+            if (args.Length == 0)
             {
                 Console.WriteLine("Use: searcher.exe [VALUE] -m [FILE/TEMPLATE] -d [START POSITION]");
                 Console.ReadLine();
                 return;
             }
 
-            if(args[1] == "-m")
+            if (args[1] == "-m")
             {
-                if(args[2] == "file")
+                if (args[2] == "file")
                 {
                     if (string.IsNullOrWhiteSpace(args[4]))
                     {
@@ -38,7 +39,7 @@ namespace Searcher
                         mode = "file";
                     }
                 }
-                else if(args[2] == "template")
+                else if (args[2] == "template")
                 {
                     if (string.IsNullOrWhiteSpace(args[4]))
                     {
@@ -58,30 +59,34 @@ namespace Searcher
                     Console.ReadLine();
                     return;
                 }
-                if(args[3] == "-d")
+                if (args[3] == "-d")
                 {
-                    if(string.IsNullOrWhiteSpace(args[4]))
+                    if (string.IsNullOrWhiteSpace(args[4]))
                     {
                         Console.WriteLine("Use: searcher.exe [VALUE] -m [FILE/TEMPLATE] -d [START POSITION]");
                         Console.ReadLine();
                         return;
-                    } else
+                    }
+                    else
                     {
                         start_disk = args[4];
                     }
                 }
             }
 
-            if(string.IsNullOrWhiteSpace(start_disk) || string.IsNullOrWhiteSpace(mode))
+            if (string.IsNullOrWhiteSpace(start_disk) || string.IsNullOrWhiteSpace(mode))
             {
                 Console.WriteLine("Use: searcher.exe [VALUE] -m [FILE/TEMPLATE] -d [START POSITION]");
                 Console.ReadLine();
                 return;
-            }
+            } 
+            #endregion
 
+            // Создает обьекта поискового шаблона
             Searcher s = new Searcher(file_name, template, mode, start_disk);
-            s.search_engine();
-            Console.WriteLine("Done");
+            // Начало поиска
+            s.search_engine(16);
+
             Console.ReadLine();
         }
     }
